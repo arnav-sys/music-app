@@ -3,7 +3,7 @@ import {Link} from "react-router-dom"
 import {Button,Grid, Typography, TextField, Radio,FormControlLabel, RadioGroup, FormControl,FormHelperText} from '@mui/material/';
 import { useState } from 'react';
 
-function CreateRoomPage() {
+function CreateRoomPage(props) {
   let defaultVotes = 2;
   const [guestCanPause, setGuestCanPause] = useState(false)
   const [votesToSkip,setVotesToSkip] = useState(defaultVotes)
@@ -17,7 +17,9 @@ function CreateRoomPage() {
         guest_can_pause:guestCanPause
       })
     }
-    fetch("http://127.0.0.1:8000/api/createroom",requestOptions).then((response) => response.json()).then((data) => console.log(data))
+    fetch("http://127.0.0.1:8000/api/createroom",requestOptions).then((response) => response.json()).then((data) => 
+    props.history.push("/room/" + data.code)
+    )
   }
 
   function setpause(e){
