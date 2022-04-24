@@ -8,8 +8,6 @@ function App(props) {
   return (
     <div className="App">
       <HomePage/>
-      <RoomJoinPage/>
-      <CreateRoomPage/>
     </div>
   );
 }
