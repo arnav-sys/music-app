@@ -75,7 +75,7 @@ export default class Room extends Component {
       headers:{"Content-Type":"application/json"},
     }
     fetch("/api/leave-room",requestOptions).then((response) => response.json()).then(
-      (data) => {
+      () => {
         this.props.leaveRoomCallback()
         this.props.history.push("/")
       }
