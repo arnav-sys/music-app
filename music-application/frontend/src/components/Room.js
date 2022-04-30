@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import {Grid, Button, Typography} from "@material-ui/core"
 import CreateRoomPage from "./CreateRoomPage";
+import MusicPlayer from "./MusicPlayer"
 
 export default class Room extends Component {
   constructor(props) {
@@ -15,12 +16,20 @@ export default class Room extends Component {
     };
     this.roomCode = this.props.match.params.roomCode;
     this.getRoomDetails();
-    this.getCurrentSong()
+    this.getCurrentSong = this.getCurrentSong.bind(this)
     this.leaveButtonPressed = this.leaveButtonPressed.bind(this)
     this.updateShowSettings = this.updateShowSettings.bind(this)
     this.renderSettingsButton = this.renderSettingsButton.bind(this)
     this.renderSettings = this.renderSettings.bind(this)
     this.authenticateSpotify = this.authenticateSpotify.bind(this)
+  }
+
+  componentDidMount(){
+    this.interval = setInterval(this.getCurrentSong,1000)
+  }
+
+  componentWillUnmount(){
+    clearInterval(this.interval)
   }
 
   getRoomDetails() {
@@ -62,7 +71,10 @@ export default class Room extends Component {
       }else{
         return response.json()
       }
-    }).then((data) =>  this.setState({song:data}))
+    }).then((data) => {
+      this.setState({song:data})
+      console.log(data)
+    })
   }
 
   updateShowSettings(value){
@@ -121,6 +133,7 @@ export default class Room extends Component {
             Code: {this.roomCode.toString()}
           </Typography>
         </Grid>
+        <MusicPlayer {...this.state.song}/>
         {this.renderSettingsButton()}
         <Grid item xs={12} align="center">
           <Button onClick={this.leaveButtonPressed} variant="contained"color="secondary">
