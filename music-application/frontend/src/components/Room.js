@@ -73,7 +73,6 @@ export default class Room extends Component {
       }
     }).then((data) => {
       this.setState({song:data})
-      console.log(data)
     })
   }
 
