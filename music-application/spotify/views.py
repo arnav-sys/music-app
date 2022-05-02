@@ -6,7 +6,7 @@ from rest_framework.response import Response
 import requests
 from api.models import Room
 from requests import post
-from .utils import execute_spotify_api_request, is_spotify_authenticated, update_or_create_user_tokens
+from .utils import execute_spotify_api_request, is_spotify_authenticated, pause_song, play_song, update_or_create_user_tokens
 
 class AuthURL(APIView):
     def get(self, request,format=None):
@@ -96,3 +96,23 @@ class CurrentSong(APIView):
         }
 
         return Response(song,status=status.HTTP_200_OK)
+
+class PauseSong(APIView):
+    def put(self,response,format=None):
+        room_code = self.request.session.get("room_code")
+        room = Room.objects.filter(code=room_code)[0]
+        if self.request.session.session_key == room.host or room.guest_can_pause:
+            pause_song(room.host)
+            return Response({},status=status.HTTP_204_NO_CONTENT)
+
+        return Response({},status=status.HTTP_403_FORBIDDEN)
+
+class PlaySong(APIView):
+    def put(self,response,format=None):
+        room_code = self.request.session.get("room_code")
+        room = Room.objects.filter(code=room_code)[0]
+        if self.request.session.session_key == room.host or room.guest_can_pause:
+            play_song(room.host)
+            return Response({},status=status.HTTP_204_NO_CONTENT)
+
+        return Response({},status=status.HTTP_403_FORBIDDEN)
